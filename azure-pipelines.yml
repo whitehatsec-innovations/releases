@@ -31,38 +31,47 @@ jobs:
         echo "Build.ArtifactStagingDirectory = $(Build.ArtifactStagingDirectory)"
         echo "Pipeline.Workspace = $(Pipeline.Workspace)"
       displayName: 'Echo Group & Pre-Defined Variables'
-    - download: DastAttackerCli
-      artifact: linux
-      patterns: "*.deb"
-      displayName: 'Download CLI Debian Artifact'
-    - bash: |
-        thisFile=$(ls *.deb)
-        debPkgName=$(basename $thisFile)
-        echo "##vso[task.setvariable variable=debPkgName]$debPkgName"
-        echo "CLI Debian package name: ${debPkgName}"
-      workingDirectory: $(Pipeline.Workspace)/DastAttackerCli/linux
-      displayName: 'Get Debian Package Name'
-    - bash: |
-        cliBuildId=$(echo $(debPkgName) | cut -d . -f4 | cut -d _ -f1)
-        echo "##vso[task.setvariable variable=cliBuildId]$cliBuildId"
-        echo "CLI Build Id ${cliBuildId}"
-      displayName: 'Get CLI Build Id'
-    - bash: |
-        GIT_TAG=${GIT_TAG:-$(IDD_RELEASE).$(cliBuildId)}
-        echo "##vso[task.setvariable variable=GIT_TAG]$GIT_TAG"
-        echo "Tag is ${GIT_TAG}"
-      displayName: 'Generate Tag'
-    - task: GitHubRelease@1
-      displayName: 'Push to Release folder'
+    - task: CmdLine@2
+      displayName: 'Install WhiteHat Security ID-DAST'
       inputs:
-        gitHubConnection: github.com
-        repositoryName: whitehatsec-innovations/distribution
-        action: create
-        tagSource: userSpecifiedTag
-        target: $(Build.SourceVersion)
-        tag: $(GIT_TAG)
-        addChangeLog: false
-        isPreRelease: true
-        assetUploadMode: replace
-        assets: |
-          $(Pipeline.Workspace)/DastAttackerCli/linux/*
+        script: |
+          set -e
+          curl -s https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest \
+            | grep "browser_download_url.*deb" \
+            | cut -d '"' -f 4 \
+            | wget -qi -
+    #- download: DastAttackerCli
+      #artifact: linux
+      #patterns: "*.deb"
+      #displayName: 'Download CLI Debian Artifact'
+    #- bash: |
+        #thisFile=$(ls *.deb)
+        #debPkgName=$(basename $thisFile)
+        #echo "##vso[task.setvariable variable=debPkgName]$debPkgName"
+        #echo "CLI Debian package name: ${debPkgName}"
+      #workingDirectory: $(Pipeline.Workspace)/DastAttackerCli/linux
+      #displayName: 'Get Debian Package Name'
+    #- bash: |
+        #cliBuildId=$(echo $(debPkgName) | cut -d . -f4 | cut -d _ -f1)
+        #echo "##vso[task.setvariable variable=cliBuildId]$cliBuildId"
+        #echo "CLI Build Id ${cliBuildId}"
+      #displayName: 'Get CLI Build Id'
+    #- bash: |
+        #GIT_TAG=${GIT_TAG:-$(IDD_RELEASE).$(cliBuildId)}
+        #echo "##vso[task.setvariable variable=GIT_TAG]$GIT_TAG"
+        #echo "Tag is ${GIT_TAG}"
+      #displayName: 'Generate Tag'
+    #- task: GitHubRelease@1
+      #displayName: 'Push to Release folder'
+      #inputs:
+        #gitHubConnection: github.com
+        #repositoryName: whitehatsec-innovations/distribution
+        #action: create
+        #tagSource: userSpecifiedTag
+        #target: $(Build.SourceVersion)
+        #tag: $(GIT_TAG)
+        #addChangeLog: false
+        #isPreRelease: true
+        #assetUploadMode: replace
+        #assets: |
+          #$(Pipeline.Workspace)/DastAttackerCli/linux/*
