@@ -31,15 +31,18 @@ jobs:
         echo "Build.ArtifactStagingDirectory = $(Build.ArtifactStagingDirectory)"
         echo "Pipeline.Workspace = $(Pipeline.Workspace)"
       displayName: 'Echo Group & Pre-Defined Variables'
+#            | grep "browser_download_url.*deb" \
+#            | cut -d '"' -f 4 \
+#            | wget -qi -
     - task: CmdLine@2
       displayName: 'Install WhiteHat Security ID-DAST'
       inputs:
         script: |
           set -e
-          curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest | grep "browser_download_url.*deb" | cut -d '"' -f 4 | curl -O -
-#            | grep "browser_download_url.*deb" \
-#            | cut -d '"' -f 4 \
-#            | wget -qi -
+          debPkgUrl = curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest | grep "browser_download_url.*deb" | cut -d '"' -f 4
+          echo "Debian Package URL = ${debPkgUrl}"
+          echo "Debian Package URL = $debPkgUrl"
+          curl -O ${debPkgUrl}
     #- download: DastAttackerCli
       #artifact: linux
       #patterns: "*.deb"
