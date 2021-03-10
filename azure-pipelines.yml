@@ -40,7 +40,7 @@ jobs:
     - task: CmdLine@2
       displayName: 'Install WhiteHat Security ID-DAST'
       inputs:
-        failOnStderr: true
+        failOnStderr: false
         script: |
           curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest \
             | grep "browser_download_url\":.*deb" \
