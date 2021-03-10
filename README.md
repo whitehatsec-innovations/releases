@@ -6,7 +6,14 @@ IDD Releases for `Debian/Ubuntu`, `macOS`, and `Windows`.
 ### Debian/Ubuntu
 
 ```bash
-curl -s https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest \
-| grep "browser_download_url.*deb" \
-| cut -d '"' -f 4 \
-| wget -qi -
+curl -OL https://github.com/whitehatsec-innovations/distribution/releases/latest/download/dast-attacker-cli.deb
+```
+or
+
+```bash
+wget https://github.com/whitehatsec-innovations/distribution/releases/latest/download/dast-attacker-cli.deb
+```
+Then to install do:
+```bash
+dpkg -i dast-attacker-cli.deb
+```

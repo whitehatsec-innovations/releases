@@ -52,6 +52,10 @@ jobs:
         echo "##vso[task.setvariable variable=GIT_TAG]$GIT_TAG"
         echo "Tag is ${GIT_TAG}"
       displayName: 'Generate Tag'
+    - bash: |
+        cd $(Pipeline.Workspace)/DastAttackerCli/linux/
+        mv dast-attacker-cli_*.deb dast-attacker-cli.deb
+      displayName: "Rename Debian Package"
     - task: GitHubRelease@1
       displayName: 'Push to Release folder'
       inputs:
