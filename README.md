@@ -7,6 +7,6 @@ IDD Releases for `Debian/Ubuntu`, `macOS`, and `Windows`.
 
 ```bash
 curl -s https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest \
-| grep "browser_download_url.*deb" \
+| grep "browser_download_url\":.*deb" \
 | cut -d '"' -f 4 \
 | wget -qi -
