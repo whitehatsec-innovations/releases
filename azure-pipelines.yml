@@ -42,10 +42,10 @@ jobs:
       inputs:
         failOnStderr: true
         script: |
-          curl -s https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest \
+          curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest \
             | grep "browser_download_url\":.*deb" \
             | cut -d '"' -f 4 \
-            | wget -qi -
+            | wget -i -
     #- download: DastAttackerCli
       #artifact: linux
       #patterns: "*.deb"
