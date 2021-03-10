@@ -34,17 +34,16 @@ jobs:
 #            | grep "browser_download_url.*deb" | cut -d '"' -f 4 
 #            | cut -d '"' -f 4 \
 #            | wget -qi -
+      #debPkgUrl=$(curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest | grep "browser_download_url.*deb" | cut -d '"' -f 4)
+      #echo "Debian Package URL = ${debPkgUrl}"
+      #wget -i ${debPkgUrl}
     - task: CmdLine@2
       displayName: 'Install WhiteHat Security ID-DAST'
       inputs:
+        failOnStderr: true
         script: |
-          set -e
           debResult=$(curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest | grep "browser_download_url.*deb" | cut -d '"' -f 4 | wget -qi -)
-
-      #debPkgUrl=$(curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest | grep "browser_download_url.*deb" | cut -d '"' -f 4)
-      #echo "Debian Package URL = ${debPkgUrl}"
-      #echo "Debian Package URL = $debPkgUrl"
-      #wget -i ${debPkgUrl}
+          echo "debResult = $debResult"
     #- download: DastAttackerCli
       #artifact: linux
       #patterns: "*.deb"
