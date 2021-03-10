@@ -42,7 +42,7 @@ jobs:
       inputs:
         failOnStderr: true
         script: |
-          debResult=$(curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest | grep "browser_download_url.*deb" | cut -d '"' -f 4 | wget -qi -)
+          debResult=$(curl https://api.github.com/repos/whitehatsec-innovations/distribution/releases/latest | grep "browser_download_url\":.*deb" | cut -d '"' -f 4 | wget -qi -)
           echo "debResult = $debResult"
     #- download: DastAttackerCli
       #artifact: linux
